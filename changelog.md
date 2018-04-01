@@ -2,3 +2,5 @@
 -------
 
 - initial creation
+- using megaparsec (testing for now)
+
