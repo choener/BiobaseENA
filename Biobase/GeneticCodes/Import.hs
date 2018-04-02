@@ -1,16 +1,24 @@
 
+-- |
+--
+-- The tables imported with these functions are from ENA:
+-- <https://www.ebi.ac.uk/ena/browse/translation-tables>
+
 module Biobase.GeneticCodes.Import where
 
 import Data.ByteString.Char8 (ByteString)
+import Data.Text.Encoding (decodeUtf8)
+import Data.Text.IO as TIO
+import Data.Text (Text,unpack)
 import Data.Void
+import System.Exit
 import Text.Megaparsec
 import Text.Megaparsec.Char as MC
 import Text.Megaparsec.Char.Lexer as MCL
-import Data.Text (Text,unpack)
-import Data.Text.IO as TIO
-import System.Exit
 
 import Biobase.GeneticCodes.Types
+
+
 
 type TTParser = Parsec Void Text
 
@@ -23,6 +31,12 @@ fromFile fp = do
   case res of
     Left err → Prelude.putStrLn (parseErrorPretty err) >> exitFailure
     Right rs → return rs
+
+-- | Parse a ByteString with translation tables.
+fromByteString ∷ ByteString → [TranslationTable]
+fromByteString bs = case runParser (some parseTranslationTable) "" (decodeUtf8 bs) of
+    Left err → error $ parseErrorPretty err
+    Right rs → rs
 
 -- | Parses a single translation table.
 

@@ -29,6 +29,7 @@ extra-source-files:
 library
   exposed-modules:
     Biobase.GeneticCodes
+    Biobase.GeneticCodes.Embedded
     Biobase.GeneticCodes.Import
     Biobase.GeneticCodes.Types
 
