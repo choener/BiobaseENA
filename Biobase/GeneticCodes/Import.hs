@@ -6,6 +6,8 @@
 
 module Biobase.GeneticCodes.Import where
 
+import Control.Monad.Except
+import Data.ByteString.Char8 as BS hiding (unpack,map)
 import Data.ByteString.Char8 (ByteString)
 import Data.Text.Encoding (decodeUtf8)
 import Data.Text.IO as TIO
@@ -25,18 +27,14 @@ type TTParser = Parsec Void Text
 -- | Import translation tables from a given file. In case of parse error, print
 -- the error and exit with a failure.
 
-fromFile ∷ FilePath → IO [TranslationTable]
-fromFile fp = do
-  res ← runParser (some parseTranslationTable) fp <$> TIO.readFile fp
-  case res of
-    Left err → Prelude.putStrLn (parseErrorPretty err) >> exitFailure
-    Right rs → return rs
+fromFile ∷ (MonadIO m) ⇒ FilePath → ExceptT String m [TranslationTable]
+fromFile fp = (liftIO $ BS.readFile fp) >>= fromByteString
 
 -- | Parse a ByteString with translation tables.
-fromByteString ∷ ByteString → [TranslationTable]
+fromByteString ∷ (Monad m) ⇒ ByteString → ExceptT String m [TranslationTable]
 fromByteString bs = case runParser (some parseTranslationTable) "" (decodeUtf8 bs) of
-    Left err → error $ parseErrorPretty err
-    Right rs → rs
+    Left err → throwError $ parseErrorPretty err
+    Right rs → return rs
 
 -- | Parses a single translation table.
 

@@ -1,6 +1,7 @@
 
 module Biobase.GeneticCodes.Embedded where
 
+import Control.Monad.Except
 import Data.ByteString (ByteString)
 import Data.FileEmbed
 
@@ -11,5 +12,5 @@ geneticCodesFile ∷ ByteString
 geneticCodesFile = $(embedFile "sources/translation-tables")
 
 geneticCodes ∷ [TranslationTable]
-geneticCodes = fromByteString geneticCodesFile
+geneticCodes = either error id . runExcept $ fromByteString geneticCodesFile
 
