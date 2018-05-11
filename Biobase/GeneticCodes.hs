@@ -19,12 +19,12 @@ import Biobase.GeneticCodes.Types
 
 
 
-codeByTableID ∷ (Monad m) ⇒ [TranslationTable] → Int → ExceptT String m TranslationTable
+codeByTableID ∷ (Monad m) ⇒ [TranslationTable c a] → Int → ExceptT String m (TranslationTable c a)
 codeByTableID ts i
   = maybe (throwError $ printf "No TranslationTable with ID %d found!" i) return
   $ find (\t → t^.tableID == i) ts
 
-codeByTableNameInfix ∷ (Monad m) ⇒ [TranslationTable] → Text → ExceptT String m TranslationTable
+codeByTableNameInfix ∷ (Monad m) ⇒ [TranslationTable c a] → Text → ExceptT String m (TranslationTable c a)
 codeByTableNameInfix ts n
   = maybe (throwError $ printf "No TranslationTable with Name infix %s found!" $ unpack n) return
   $ find (\t → n `isInfixOf` (t^.tableName)) ts

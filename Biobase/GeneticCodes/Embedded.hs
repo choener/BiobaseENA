@@ -11,6 +11,6 @@ import Biobase.GeneticCodes.Types
 geneticCodesFile ∷ ByteString
 geneticCodesFile = $(embedFile "sources/translation-tables")
 
-geneticCodes ∷ [TranslationTable]
+geneticCodes ∷ [TranslationTable Char Char]
 geneticCodes = either error id . runExcept $ fromByteString geneticCodesFile
 

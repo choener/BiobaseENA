@@ -20,13 +20,19 @@ import           Biobase.GeneticCodes.Types
 class Translation t where
   -- | Defines the target type for a given translation input.
   type TargetType t ∷ *
+  -- | Type of the nucleotide characters.
+  type TripletType t ∷ *
+  -- | Type of the amino acid characters.
+  type AAType t ∷ *
   -- | Translate from a given type of sequence @t@ into the target type.
-  translate ∷ TranslationTable → t → TargetType t
+  translate ∷ TranslationTable (TripletType t) (AAType t) → t → TargetType t
 
 -- | Very simple translation of individual base triplets.
 
-instance Translation BaseTriplet where
-  type TargetType BaseTriplet = Char
-  translate tbl t = M.findWithDefault (error "default AA element? Or is this total?") t (tbl^.tripletToAminoAcid) ^. aminoAcid
+instance Translation (BaseTriplet Char) where
+  type TargetType  (BaseTriplet Char) = Char
+  type TripletType (BaseTriplet Char) = Char
+  type AAType      (BaseTriplet Char) = Char
+  translate tbl t = maybe 'X' _aminoAcid $ M.lookup t (tbl^.tripletToAminoAcid)
   {-# Inline translate #-}
 
