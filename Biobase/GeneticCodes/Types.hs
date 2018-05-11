@@ -1,4 +1,6 @@
 
+-- |
+
 module Biobase.GeneticCodes.Types where
 
 import Control.Lens
@@ -11,24 +13,24 @@ import Data.Text (Text)
 data BaseTriplet = BaseTriplet !Char !Char !Char
   deriving (Show,Eq,Ord)
 
-data Translation = Translation
+data TranslationElement = TranslationElement
   { _baseTriplet  ∷ !BaseTriplet
   , _isStartCodon ∷ !Bool
   , _aminoAcid    ∷ !Char
   }
   deriving (Show)
-makeLenses ''Translation
+makeLenses ''TranslationElement
 
 data TranslationTable = TranslationTable
-  { _tripletToAminoAcid   ∷ !(Map BaseTriplet Translation)
-  , _aminoAcidtoTriplets  ∷ !(Map Char [Translation])
+  { _tripletToAminoAcid   ∷ !(Map BaseTriplet TranslationElement)
+  , _aminoAcidtoTriplets  ∷ !(Map Char [TranslationElement])
   , _tableID              ∷ !Int
   , _tableName            ∷ !Text
   }
   deriving (Show)
 makeLenses ''TranslationTable
 
-genTranslationTable ∷ Int → Text → [Translation] → TranslationTable
+genTranslationTable ∷ Int → Text → [TranslationElement] → TranslationTable
 genTranslationTable i hdr xs = TranslationTable
   { _tripletToAminoAcid  = fromList [ (t^.baseTriplet, t) | t ← xs ]
   , _aminoAcidtoTriplets = fromListWith (++) [ (t^.aminoAcid, [t]) | t ← xs ]

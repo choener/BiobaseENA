@@ -48,7 +48,7 @@ parseTranslationTable = do
   base3   ← parseData "Base 3"
   let triplets = zipWith3 BaseTriplet base1 base2 base3
   let starts   = map (=='M') starts'
-  let translations = zipWith3 Translation triplets starts aas
+  let translations = zipWith3 TranslationElement triplets starts aas
   return $ genTranslationTable i hdr translations
 
 -- | Parse the header, returning the Identifier and the name of the table.
