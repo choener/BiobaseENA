@@ -37,6 +37,7 @@ library
   build-depends: base                     >= 4.7      &&  < 5.0
                , bytestring
                , containers
+               , directory
                , file-embed               >= 0.0.10
                , lens                     >= 4.0
                , megaparsec               >= 6.0

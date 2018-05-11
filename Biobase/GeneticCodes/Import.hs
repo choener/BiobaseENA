@@ -27,11 +27,18 @@ type TTParser = Parsec Void Text
 -- | Import translation tables from a given file. In case of parse error, print
 -- the error and exit with a failure.
 
-fromFile ∷ (MonadIO m) ⇒ FilePath → ExceptT String m [TranslationTable Char Char]
+fromFile
+  ∷ (MonadIO m, MonadError String m)
+  ⇒ FilePath
+  → m [TranslationTable Char Char]
 fromFile fp = (liftIO $ BS.readFile fp) >>= fromByteString
 
 -- | Parse a ByteString with translation tables.
-fromByteString ∷ (Monad m) ⇒ ByteString → ExceptT String m [TranslationTable Char Char]
+
+fromByteString
+  ∷ (MonadError String m)
+  ⇒ ByteString
+  → m [TranslationTable Char Char]
 fromByteString bs = case runParser (some parseTranslationTable) "" (decodeUtf8 bs) of
     Left err → throwError $ parseErrorPretty err
     Right rs → return rs
