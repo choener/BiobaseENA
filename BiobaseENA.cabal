@@ -53,6 +53,8 @@ library
   default-extensions: BangPatterns
                     , FlexibleContexts
                     , FlexibleInstances
+                    , MultiWayIf
+                    , LambdaCase
                     , OverloadedStrings
                     , TemplateHaskell
                     , TypeFamilies
