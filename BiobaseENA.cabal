@@ -23,6 +23,7 @@ Description:
 extra-source-files:
   changelog.md
   README.md
+  sources/translation-tables
 
 
 

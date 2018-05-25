@@ -1,14 +1,15 @@
-with import <nixpkgs> {};
-let
-  packageOverrides = haskellPackages.override {
-    overrides = self: super: {
-      # old doctest
-      pipes-group = haskell.lib.dontCheck super.pipes-group;
-    };
-  };
-  sourceOverrides = packageOverrides.extend (haskell.lib.packageSourceOverrides {
+with (import <nixpkgs> {});
+with haskell.lib;
+
+rec {
+  hsPkgs = haskellPackages.extend (packageSourceOverrides {
     BiobaseENA = ./.;
   });
-in
-sourceOverrides
-
+  hsShell = with hsPkgs; shellFor {
+    packages = p: [ p.BiobaseENA ];
+    withHoogle = true;
+    buildInputs = [
+      cabal-install ghc
+    ];
+  };
+}
