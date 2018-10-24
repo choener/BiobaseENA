@@ -40,7 +40,8 @@ fromByteString
   ⇒ ByteString
   → m [TranslationTable Char Char]
 fromByteString bs = case runParser (some parseTranslationTable) "" (decodeUtf8 bs) of
-    Left err → throwError $ parseErrorPretty err
+    -- Left err → throwError $ parseErrorPretty err -- megaparsec 6.x
+    Left err → throwError $ errorBundlePretty err   -- megaparsec 7.x
     Right rs → return rs
 
 -- | Parses a single translation table.

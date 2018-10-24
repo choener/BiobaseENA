@@ -41,7 +41,7 @@ library
                , directory
                , file-embed               >= 0.0.10
                , lens                     >= 4.0
-               , megaparsec               >= 6.0
+               , megaparsec               >= 7.0
                , mtl                      >= 2.0
                , text
                , vector                   >= 0.10
