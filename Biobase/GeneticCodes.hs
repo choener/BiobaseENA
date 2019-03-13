@@ -15,6 +15,7 @@ import Data.Text (pack)
 import Data.Text (Text,isInfixOf,unpack)
 import System.Directory (doesFileExist)
 import Text.Printf
+import System.Exit (exitSuccess)
 
 import Biobase.GeneticCodes.Embedded
 import Biobase.GeneticCodes.Import
@@ -48,6 +49,9 @@ codeByTableNameInfix ts n
 --
 -- This is all slightly "unsafe" but captures the most common scenario where we
 -- either load such a table from file or need selection of the correct one.
+--
+-- If the given filepath is @"list"@, then a list of table id's and table names
+-- is returned.
 
 fromFileOrCached
   ∷ (MonadIO m, MonadError String m)
@@ -55,7 +59,10 @@ fromFileOrCached
   → m (TranslationTable Char Char)
 fromFileOrCached fp = do
   dfe ← liftIO $ doesFileExist fp
-  if | dfe → fromFile fp >>= \case
+  if | fp == "list" → do
+          mapM_ (liftIO . uncurry (printf "%3d %s\n")) [ (t^.tableID,t^.tableName) | t ← geneticCodes ]
+          liftIO exitSuccess
+     | dfe → fromFile fp >>= \case
          [x] → return x
          xs  → throwError $ fp ++ " should contain exactly one translation table!"
      | [(k,"")] ← reads fp → codeByTableID geneticCodes k
