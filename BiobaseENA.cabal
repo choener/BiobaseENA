@@ -46,6 +46,8 @@ library
                , text
                , vector                   >= 0.10
                , vector-th-unbox          >= 0.2
+               --
+               , BiobaseTypes             == 0.2.0.*
   ghc-options:
     -O2
     -funbox-strict-fields
