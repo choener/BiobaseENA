@@ -21,10 +21,10 @@ data TranslationElement c a = TranslationElement
 makeLenses ''TranslationElement
 
 data TranslationTable c a = TranslationTable
-  { _codonToAminoAcid     ∷ !(Map (Codon c) (TranslationElement c a))
-  , _aminoAcidtoTriplets  ∷ !(Map a [TranslationElement c a])
-  , _tableID              ∷ !Int
-  , _tableName            ∷ !Text
+  { _codonToAminoAcid  ∷ !(Map (Codon c) (TranslationElement c a))
+  , _aminoAcidtoCodons ∷ !(Map a [TranslationElement c a])
+  , _tableID           ∷ !Int
+  , _tableName         ∷ !Text
   }
   deriving (Show)
 makeLenses ''TranslationTable
@@ -41,9 +41,9 @@ genTranslationTable
   -- ^ finished translation table
 {-# Inlinable genTranslationTable #-}
 genTranslationTable i hdr xs = TranslationTable
-  { _codonToAminoAcid    = fromList [ (t^.baseCodon, t) | t ← xs ]
-  , _aminoAcidtoTriplets = fromListWith (++) [ (t^.aminoAcid, [t]) | t ← xs ]
-  , _tableID             = i
-  , _tableName           = hdr
+  { _codonToAminoAcid  = fromList [ (t^.baseCodon, t) | t ← xs ]
+  , _aminoAcidtoCodons = fromListWith (++) [ (t^.aminoAcid, [t]) | t ← xs ]
+  , _tableID           = i
+  , _tableName         = hdr
   }
 
