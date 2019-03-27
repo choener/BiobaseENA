@@ -1,20 +1,20 @@
+Cabal-version:  2.2
 Name:           BiobaseENA
 Version:        0.0.0.1
-License:        BSD3
+License:        BSD-3-Clause
 License-file:   LICENSE
 Author:         Christian Hoener zu Siederdissen
 Maintainer:     choener@bioinf.uni-leipzig.de
-Copyright:      Christian Hoener zu Siederdissen, 2018
+Copyright:      Christian Hoener zu Siederdissen, 2019
 homepage:       https://github.com/choener/BiobaseENA
 bug-reports:    https://github.com/choener/BiobaseENA/issues
 Stability:      Experimental
 Category:       Data
 Build-type:     Simple
-Cabal-version:  >= 1.10
-tested-with:    GHC == 8.2.2
+tested-with:    GHC == 8.4.4
 Synopsis:       European Nucleotide Archive data
 Description:
-                Provides data and API access to the European Nucleotide Archive.
+                Provides data (and later API) access to the European Nucleotide Archive.
                 .
                 * Taxonomy Service / Translation tables (hardcoded)
 
@@ -26,15 +26,7 @@ extra-source-files:
   sources/translation-tables
 
 
-
-library
-  exposed-modules:
-    Biobase.GeneticCodes
-    Biobase.GeneticCodes.Embedded
-    Biobase.GeneticCodes.Import
-    Biobase.GeneticCodes.Translation
-    Biobase.GeneticCodes.Types
-
+common deps
   build-depends: base                     >= 4.7      &&  < 5.0
                , bytestring
                , containers
@@ -64,8 +56,22 @@ library
                     , UnicodeSyntax
 
 
+library
+  import:
+    deps
+  exposed-modules:
+    Biobase.GeneticCodes
+    Biobase.GeneticCodes.Embedded
+    Biobase.GeneticCodes.Import
+    Biobase.GeneticCodes.Translation
+    Biobase.GeneticCodes.Types
+
+
+
 
 test-suite properties
+  import:
+    deps
   type:
     exitcode-stdio-1.0
   main-is:
@@ -74,15 +80,7 @@ test-suite properties
     -threaded -rtsopts -with-rtsopts=-N
   hs-source-dirs:
     tests
-  default-language:
-    Haskell2010
-  default-extensions: BangPatterns
-                    , ScopedTypeVariables
-                    , TemplateHaskell
-                    , TypeFamilies
-                    , UnicodeSyntax
-  build-depends: base
-               , BiobaseENA
+  build-depends: BiobaseENA
                , QuickCheck                   >= 2.7
                , tasty                        >= 0.11
                , tasty-quickcheck             >= 0.8

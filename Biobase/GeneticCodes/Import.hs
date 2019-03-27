@@ -18,6 +18,8 @@ import Text.Megaparsec
 import Text.Megaparsec.Char as MC
 import Text.Megaparsec.Char.Lexer as MCL
 
+import Biobase.Types.Codon
+
 import Biobase.GeneticCodes.Types
 
 
@@ -54,7 +56,7 @@ parseTranslationTable = do
   base1   ← parseData "Base 1"
   base2   ← parseData "Base 2"
   base3   ← parseData "Base 3"
-  let triplets = zipWith3 BaseTriplet base1 base2 base3
+  let triplets = zipWith3 Codon base1 base2 base3
   let starts   = map (=='M') starts'
   let translations = zipWith3 TranslationElement triplets starts aas
   return $ genTranslationTable i hdr translations
