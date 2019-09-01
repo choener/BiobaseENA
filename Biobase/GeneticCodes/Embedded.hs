@@ -9,7 +9,7 @@ import Biobase.GeneticCodes.Import
 import Biobase.GeneticCodes.Types
 
 geneticCodesFile ∷ ByteString
-geneticCodesFile = $(embedFile "sources/translation-tables")
+geneticCodesFile = $(makeRelativeToProject "sources/translation-tables" >>= embedFile)
 
 geneticCodes ∷ [TranslationTable Char Char]
 geneticCodes = either error id . runExcept $ fromByteString geneticCodesFile
