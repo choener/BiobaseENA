@@ -25,22 +25,22 @@ import Biobase.GeneticCodes.Types
 
 
 codeByTableID
-  ∷ (MonadError String m)
-  ⇒ [TranslationTable c a]
-  → Int
-  → m (TranslationTable c a)
+  :: (MonadError String m)
+  => [TranslationTable c a]
+  -> Int
+  -> m (TranslationTable c a)
 codeByTableID ts i
   = maybe (throwError $ printf "No TranslationTable with ID %d found!" i) return
-  $ find (\t → t^.tableID == i) ts
+  $ find (\t -> t^.tableID == i) ts
 
 codeByTableNameInfix
-  ∷ (MonadError String m)
-  ⇒ [TranslationTable c a]
-  → Text
-  → m (TranslationTable c a)
+  :: (MonadError String m)
+  => [TranslationTable c a]
+  -> Text
+  -> m (TranslationTable c a)
 codeByTableNameInfix ts n
   = maybe (throwError $ printf "No TranslationTable with Name infix %s found!" $ unpack n) return
-  $ find (\t → n `isInfixOf` (t^.tableName)) ts
+  $ find (\t -> n `isInfixOf` (t^.tableName)) ts
 
 -- | If the given filepath exists, then we try to load the genetic table from
 -- the file. This will fail if there is not exactly one genetic table there. If
@@ -54,17 +54,17 @@ codeByTableNameInfix ts n
 -- is returned.
 
 fromFileOrCached
-  ∷ (MonadIO m, MonadError String m)
-  ⇒ FilePath
-  → m (TranslationTable Char Char)
+  :: (MonadIO m, MonadError String m)
+  => FilePath
+  -> m (TranslationTable Char Char)
 fromFileOrCached fp = do
   dfe ← liftIO $ doesFileExist fp
-  if | fp == "list" → do
+  if | fp == "list" -> do
           mapM_ (liftIO . uncurry (printf "%3d %s\n")) [ (t^.tableID,t^.tableName) | t ← geneticCodes ]
           liftIO exitSuccess
-     | dfe → fromFile fp >>= \case
-         [x] → return x
-         xs  → throwError $ fp ++ " should contain exactly one translation table!"
-     | [(k,"")] ← reads fp → codeByTableID geneticCodes k
-     | otherwise → codeByTableNameInfix geneticCodes $ pack fp
+     | dfe -> fromFile fp >>= \case
+         [x] -> return x
+         xs  -> throwError $ fp ++ " should contain exactly one translation table!"
+     | [(k,"")] <- reads fp -> codeByTableID geneticCodes k
+     | otherwise -> codeByTableNameInfix geneticCodes $ pack fp
 

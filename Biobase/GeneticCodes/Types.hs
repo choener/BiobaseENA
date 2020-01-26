@@ -13,31 +13,31 @@ import Biobase.Types.Codon
 
 
 data TranslationElement c a = TranslationElement
-  { _baseCodon    ∷ !(Codon c)
-  , _isStartCodon ∷ !Bool
-  , _aminoAcid    ∷ !a
+  { _baseCodon    :: !(Codon c)
+  , _isStartCodon :: !Bool
+  , _aminoAcid    :: !a
   }
   deriving (Show)
 makeLenses ''TranslationElement
 
 data TranslationTable c a = TranslationTable
-  { _codonToAminoAcid  ∷ !(Map (Codon c) (TranslationElement c a))
-  , _aminoAcidtoCodons ∷ !(Map a [TranslationElement c a])
-  , _tableID           ∷ !Int
-  , _tableName         ∷ !Text
+  { _codonToAminoAcid  :: !(Map (Codon c) (TranslationElement c a))
+  , _aminoAcidtoCodons :: !(Map a [TranslationElement c a])
+  , _tableID           :: !Int
+  , _tableName         :: !Text
   }
   deriving (Show)
 makeLenses ''TranslationTable
 
 genTranslationTable
-  ∷ (Ord c, Ord a)
-  ⇒ Int
+  :: (Ord c, Ord a)
+  => Int
   -- ^ table identifier
-  → Text
+  -> Text
   -- ^ table hdr / table name
-  → [TranslationElement c a]
+  -> [TranslationElement c a]
   -- ^ known translation elements (should be @4^3@ but is not checked)
-  → TranslationTable c a
+  -> TranslationTable c a
   -- ^ finished translation table
 {-# Inlinable genTranslationTable #-}
 genTranslationTable i hdr xs = TranslationTable

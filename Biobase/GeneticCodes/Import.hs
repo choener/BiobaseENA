@@ -30,25 +30,25 @@ type TTParser = Parsec Void Text
 -- the error and exit with a failure.
 
 fromFile
-  ∷ (MonadIO m, MonadError String m)
-  ⇒ FilePath
-  → m [TranslationTable Char Char]
+  :: (MonadIO m, MonadError String m)
+  => FilePath
+  -> m [TranslationTable Char Char]
 fromFile fp = (liftIO $ BS.readFile fp) >>= fromByteString
 
 -- | Parse a ByteString with translation tables.
 
 fromByteString
-  ∷ (MonadError String m)
-  ⇒ ByteString
-  → m [TranslationTable Char Char]
+  :: (MonadError String m)
+  => ByteString
+  -> m [TranslationTable Char Char]
 fromByteString bs = case runParser (some parseTranslationTable) "" (decodeUtf8 bs) of
-    -- Left err → throwError $ parseErrorPretty err -- megaparsec 6.x
-    Left err → throwError $ errorBundlePretty err   -- megaparsec 7.x
-    Right rs → return rs
+    -- Left err -> throwError $ parseErrorPretty err -- megaparsec 6.x
+    Left err -> throwError $ errorBundlePretty err   -- megaparsec 7.x
+    Right rs -> return rs
 
 -- | Parses a single translation table.
 
-parseTranslationTable ∷ TTParser (TranslationTable Char Char)
+parseTranslationTable :: TTParser (TranslationTable Char Char)
 parseTranslationTable = do
   (i,hdr) ← parseHeader
   aas     ← parseData "amino acids"
@@ -63,14 +63,14 @@ parseTranslationTable = do
 
 -- | Parse the header, returning the Identifier and the name of the table.
 
-parseHeader ∷ TTParser (Int,Text)
+parseHeader :: TTParser (Int,Text)
 parseHeader
   = (,) <$> (fromIntegral <$> lexeme MC.space decimal)
   <* char ':' <* MC.space
   <*> takeWhileP Nothing (/= '\n')
   <* MC.space
 
-parseData ∷ Text → TTParser String
+parseData :: Text -> TTParser String
 parseData t
   = string' t <* MC.space
   *> (unpack <$> takeP Nothing 64)
