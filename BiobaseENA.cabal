@@ -11,7 +11,7 @@ bug-reports:    https://github.com/choener/BiobaseENA/issues
 Stability:      Experimental
 Category:       Data
 Build-type:     Simple
-tested-with:    GHC == 8.6.5
+tested-with:    GHC == 8.8, GHC == 8.10, GHC == 9.0
 Synopsis:       European Nucleotide Archive data
 Description:
                 Provides data (and later API) access to the European Nucleotide Archive.
