@@ -1,10 +1,10 @@
 { mkDerivation, base, BiobaseTypes, bytestring, containers
-, directory, file-embed, lens, megaparsec, mtl, QuickCheck, stdenv
+, directory, file-embed, lens, lib, megaparsec, mtl, QuickCheck
 , tasty, tasty-quickcheck, tasty-th, text, vector, vector-th-unbox
 }:
 mkDerivation {
   pname = "BiobaseENA";
-  version = "0.0.0.1";
+  version = "0.0.0.2";
   src = ./.;
   libraryHaskellDepends = [
     base BiobaseTypes bytestring containers directory file-embed lens
@@ -17,5 +17,5 @@ mkDerivation {
   ];
   homepage = "https://github.com/choener/BiobaseENA";
   description = "European Nucleotide Archive data";
-  license = stdenv.lib.licenses.bsd3;
+  license = lib.licenses.bsd3;
 }
